@@ -95,9 +95,11 @@ const Letter = ({ letter, letterIdx, selected }: LetterProps) => {
         variant: letter.variant,
         idx: letterIdx,
       }}
-      className={`grid h-16 w-16 place-items-center border-gray-200 dark:border-gray-700`}
+      className={`letter | grid h-16 w-16 place-items-center border-gray-200 dark:border-gray-700`}
     >
-      <span className={`text-foreground text-4xl font-bold uppercase`}>
+      <span
+        className={`letter-text | text-foreground text-4xl font-bold uppercase`}
+      >
         {letter.key}
       </span>
     </motion.div>

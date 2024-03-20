@@ -12,6 +12,7 @@ const App = () => {
     pos,
     newGameModalOpen,
     resultsModalOpen,
+    wordsScope,
     onEasyClick,
     onHardClick,
     onNewRound,
@@ -22,7 +23,7 @@ const App = () => {
   return (
     <div className="bg-background text-primary flex h-dvh flex-col">
       <header>
-        <div className="container py-2 font-semibold flex justify-between items-center">
+        <div className="container flex items-center justify-between py-2 font-semibold">
           <h1 className="text-lg">Yet another wordle</h1>
           <ThemeToggle />
         </div>
@@ -44,7 +45,7 @@ const App = () => {
       />
 
       <div className={`grid h-full place-items-center`}>
-        <div className={`flex flex-col gap-2`}>
+        <div ref={wordsScope} className={`flex flex-col gap-2`}>
           {words &&
             words.map((word, wordIdx) => (
               <Word

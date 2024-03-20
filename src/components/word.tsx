@@ -9,7 +9,7 @@ type WordProps = {
 
 const Word = ({ word, selected, posLetterIdx }: WordProps) => {
   return (
-    <div className={`flex gap-2`}>
+    <div className={`word | flex gap-2`}>
       {word.output.map((letter, letterIdx) => (
         <Letter
           key={letterIdx}

@@ -1,4 +1,6 @@
+import { useAnimate } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
+import dictionary from "../assets/dictionary.json";
 import wordsEasy from "../assets/words_easy.json";
 import wordsHard from "../assets/words_hard.json";
 import { useTheme } from "../components/theme-provider";
@@ -19,11 +21,14 @@ const useGame = () => {
   const [newGameModalOpen, setNewGameModalOpen] = useState(true);
   const [resultsModalOpen, setResultsModalOpen] = useState(false);
   const [words, setWords] = useState<WordType[] | null>(null);
+
   const solution = useRef<string | null>(null);
   const pos = useRef({
     wordIdx: 0,
     letterIdx: 0,
   });
+
+  const [scope, animate] = useAnimate();
 
   const { theme } = useTheme();
   const { setColors } = useLetterColors();
@@ -34,7 +39,7 @@ const useGame = () => {
     solution.current = randomWord;
     setRoundState("playing");
 
-    console.log(solution.current);
+    // console.log(solution.current);
   };
 
   const onHardClick = () => {
@@ -43,7 +48,7 @@ const useGame = () => {
     solution.current = randomWord;
     setRoundState("playing");
 
-    console.log(solution.current);
+    // console.log(solution.current);
   };
 
   const onNewRound = () => {
@@ -83,6 +88,21 @@ const useGame = () => {
 
       if (key === "enter") {
         if (words![pos.current.wordIdx].input.length !== lettersPerWord) return;
+
+        // If word not in dictionary
+        if (!dictionary.includes(words![pos.current.wordIdx].input)) {
+          animate(
+            `.word:nth-child(${pos.current.wordIdx + 1}) > .letter:nth-child(odd)`,
+            { y: [8, -8, 5, -5, 0] },
+            { duration: 0.3 },
+          );
+          animate(
+            `.word:nth-child(${pos.current.wordIdx + 1}) > .letter:nth-child(even)`,
+            { y: [-8, 8, -10, 10, 0] },
+            { duration: 0.3 },
+          );
+          return;
+        }
 
         const _words = [...words!];
         const _word = _words[pos.current.wordIdx];
@@ -172,6 +192,7 @@ const useGame = () => {
     solution,
     words,
     pos: { wordIdx: pos.current.wordIdx, letterIdx: pos.current.letterIdx },
+    wordsScope: scope,
   };
 };
 
