@@ -1,5 +1,6 @@
 import NewGameModal from "./components/modals/new-game-modal";
 import ResultsModal from "./components/modals/results-modal";
+import ThemeToggle from "./components/theme-toggle";
 import Word from "./components/word";
 import useGame from "./hooks/use-game";
 
@@ -19,7 +20,14 @@ const App = () => {
   } = useGame();
 
   return (
-    <div className="flex h-dvh flex-col">
+    <div className="bg-background text-primary flex h-dvh flex-col">
+      <header>
+        <div className="container py-2 font-semibold flex justify-between items-center">
+          <h1 className="text-lg">Yet another wordle</h1>
+          <ThemeToggle />
+        </div>
+      </header>
+
       <NewGameModal
         open={newGameModalOpen}
         onOpenChange={setNewGameModalOpen}

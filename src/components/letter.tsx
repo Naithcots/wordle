@@ -1,6 +1,7 @@
 import { Variants, motion } from "framer-motion";
 import useLetterColors from "../hooks/use-letter-colors";
 import { LetterType } from "../types";
+import { useTheme } from "./theme-provider";
 
 type LetterProps = {
   letter: LetterType;
@@ -10,6 +11,7 @@ type LetterProps = {
 
 const Letter = ({ letter, letterIdx, selected }: LetterProps) => {
   const { colors } = useLetterColors();
+  const { theme } = useTheme();
 
   const letterVariants: Variants = {
     hidden: () => {
@@ -22,6 +24,7 @@ const Letter = ({ letter, letterIdx, selected }: LetterProps) => {
     },
     selected: {
       borderWidth: "4px",
+      borderColor: `rgb(${colors.selected})`,
       transition: { duration: 0.1 },
     },
     typed: {
@@ -86,15 +89,17 @@ const Letter = ({ letter, letterIdx, selected }: LetterProps) => {
               ? "typed"
               : ""
       }
+      key={theme + colors.background}
       variants={letterVariants}
       custom={{
         variant: letter.variant,
         idx: letterIdx,
       }}
-      key={letterIdx}
-      className={`grid h-16 w-16 place-items-center`}
+      className={`grid h-16 w-16 place-items-center border-gray-200 dark:border-gray-700`}
     >
-      <span className={`text-4xl font-bold uppercase`}>{letter.key}</span>
+      <span className={`text-foreground text-4xl font-bold uppercase`}>
+        {letter.key}
+      </span>
     </motion.div>
   );
 };

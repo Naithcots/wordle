@@ -5,6 +5,7 @@ type ColorsType = {
   correct: string;
   incorrect: string;
   exists: string;
+  selected: string;
 };
 
 type LetterColorsState = {
@@ -17,6 +18,7 @@ const initialColorsState: ColorsType = {
   correct: "",
   incorrect: "",
   exists: "",
+  selected: "",
 };
 
 const useLetterColors = create<LetterColorsState>((set) => ({

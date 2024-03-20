@@ -29,7 +29,7 @@ const ResultsModal = ({
           {state === "resultsCorrect" && "Congratulations!"}
           {state === "resultsIncorrect" && "That was close..."}
         </p>
-        <p className="mb-3 max-w-96 opacity-75">
+        <p className="text-muted-foreground mb-4 max-w-96">
           {state === "resultsCorrect" && "You guessed the correct word!"}
           {state === "resultsIncorrect" && (
             <span>
@@ -41,9 +41,9 @@ const ResultsModal = ({
         <div className="flex gap-4">
           <button
             onClick={handleNewRound}
-            className="min-w-20 rounded-md border px-3 py-2 text-center hover:bg-gray-100"
+            className="hover:bg-secondary border-border bg-accent mx-auto rounded-md border px-4 py-2 text-center"
           >
-            <p className="text-xl text-green-600">Start a new round!</p>
+            <p className="text-xl">Start a new round!</p>
           </button>
         </div>
       </div>

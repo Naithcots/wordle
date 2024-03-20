@@ -65,11 +65,14 @@ const useGame = () => {
   }, []);
 
   useEffect(() => {
-    setColors({
-      background: getComputedStyleValue("--letter-bg"),
-      correct: getComputedStyleValue("--letter-correct"),
-      incorrect: getComputedStyleValue("--letter-incorrect"),
-      exists: getComputedStyleValue("--letter-exists"),
+    setTimeout(() => {
+      setColors({
+        background: getComputedStyleValue("--letter-bg"),
+        correct: getComputedStyleValue("--letter-correct"),
+        incorrect: getComputedStyleValue("--letter-incorrect"),
+        exists: getComputedStyleValue("--letter-exists"),
+        selected: getComputedStyleValue("--letter-selected"),
+      });
     });
   }, [theme]);
 

@@ -87,15 +87,15 @@ const ModalComponent = ({
   }, [isPresent]);
 
   return (
-    <div ref={scope} className="fixed inset-0 grid place-items-center z-[999]">
+    <div ref={scope} className="fixed inset-0 z-[999] grid place-items-center">
       <div
         onClick={canClose ? closeModal : () => {}}
-        className="modal-bg | absolute inset-0 bg-black/75"
+        className="modal-bg | bg-background/75 absolute inset-0"
       />
-      <div className="modal-window | relative min-w-[50%] overflow-hidden rounded-sm bg-white">
+      <div className="modal-window | bg-card text-card-foreground rounded-primary relative min-w-[50%] overflow-hidden shadow-sm">
         {canClose && (
           <button className="absolute right-3 top-3">
-            <X onClick={closeModal} className="text-gray-500" />
+            <X onClick={closeModal} />
           </button>
         )}
         <div className="px-8 py-6">{children}</div>

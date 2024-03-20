@@ -3,18 +3,47 @@
 @tailwind utilities;
 
 :root {
-  --white: 255 255 255;
-  --black: 0 0 0;
+  --background: 242 11% 95%;
+  --foreground: 242 5% 0%;
+  --card: 242 11% 90%;
+  --card-foreground: 242 5% 10%;
+  --primary: 242 25% 57%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 242 11% 70%;
+  --secondary-foreground: 0 0% 0%;
+  --muted: 204 11% 85%;
+  --muted-foreground: 242 5% 35%;
+  --accent: 204 11% 80%;
+  --accent-foreground: 242 5% 10%;
+  --border: 242 20% 50%;
+  --radius: 0.5rem;
 
   --letter-bg: 255 255 255;
   --letter-correct: 74 222 128;
   --letter-incorrect: 156 163 175;
   --letter-exists: 250 204 21;
+  --letter-selected: 120 118 173;
 }
 
-[class="dark"] {
+.dark {
+  --background: 242 11% 5%;
+  --foreground: 242 5% 90%;
+  --card: 242 11% 0%;
+  --card-foreground: 242 5% 90%;
+  --primary: 242 25% 57%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 242 11% 10%;
+  --secondary-foreground: 0 0% 100%;
+  --muted: 204 11% 15%;
+  --muted-foreground: 242 5% 60%;
+  --accent: 204 11% 15%;
+  --accent-foreground: 242 5% 90%;
+  --border: 242 20% 18%;
+  --radius: 0.5rem;
+
   --letter-bg: 0 0 0;
-  --letter-correct: 74 222 128;
-  --letter-incorrect: 156 163 175;
-  --letter-exists: 250 204 21;
+  --letter-correct: 23 138 65;
+  --letter-incorrect: 125 130 138;
+  --letter-exists: 250 147 21;
+  --letter-selected: 120 118 173;
 }
