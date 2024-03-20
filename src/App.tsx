@@ -1,6 +1,10 @@
 import { Variants, motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
-import { Letter, Word } from "./types";
+import wordsEasy from "./assets/words_easy.json";
+import wordsHard from "./assets/words_hard.json";
+import NewGameModal from "./components/modals/new-game-modal";
+import ResultsModal from "./components/modals/results-modal";
+import { Letter, RoundState, Word } from "./types";
 
 const generateWords = (wordAmount: number, lettersPerWord: number) => {
   let words: Word[] = [];
@@ -77,18 +81,54 @@ const processWord = (word: Word, solution: string): Word => {
 
 const App = () => {
   const theme: "light" | "dark" = "light";
-  const solution = "abcde";
   const wordAmount = 6;
   const lettersPerWord = 5;
+  const resultsModalTimeout = 1000;
 
+  const [roundState, setRoundState] = useState<RoundState>("init");
+  const [newGameModalOpen, setNewGameModalOpen] = useState(true);
+  const [resultsModalOpen, setResultsModalOpen] = useState(false);
   const [words, setWords] = useState<Word[] | null>(null);
+  const solution = useRef<string | null>(null);
   const pos = useRef({
     wordIdx: 0,
     letterIdx: 0,
   });
 
-  useEffect(() => {
+  const onEasyClick = () => {
+    const randomWord =
+      wordsEasy[Math.floor(Math.random() * (wordsEasy.length - 1))];
+    solution.current = randomWord;
+    setRoundState("playing");
+
+    console.log(solution.current);
+  };
+
+  const onHardClick = () => {
+    const randomWord =
+      wordsHard[Math.floor(Math.random() * (wordsHard.length - 1))];
+    solution.current = randomWord;
+    setRoundState("playing");
+
+    console.log(solution.current);
+  };
+
+  const onNewRound = () => {
+    pos.current = { letterIdx: 0, wordIdx: 0 };
     setWords(generateWords(wordAmount, lettersPerWord));
+    setRoundState("init");
+    setNewGameModalOpen(true);
+  };
+
+  useEffect(() => {
+    const init = () => {
+      setRoundState("init");
+      setWords(generateWords(wordAmount, lettersPerWord));
+      pos.current = { letterIdx: 0, wordIdx: 0 };
+      setNewGameModalOpen(true);
+    };
+
+    init();
   }, []);
 
   useEffect(() => {
@@ -112,6 +152,24 @@ const App = () => {
         pos.current.wordIdx++;
         pos.current.letterIdx = 0;
         setWords(_words);
+
+        // If word is corrent
+        if (_word.input === solution.current) {
+          setRoundState("resultsCorrect");
+          setTimeout(() => {
+            setResultsModalOpen(true);
+          }, resultsModalTimeout);
+          return;
+        }
+
+        // If last word is incorrect
+        if (pos.current.wordIdx === wordAmount) {
+          setRoundState("resultsIncorrect");
+          setTimeout(() => {
+            setResultsModalOpen(true);
+          }, resultsModalTimeout);
+          return;
+        }
       }
 
       if (key === "backspace") {
@@ -120,7 +178,10 @@ const App = () => {
         const _wordWithoutLetter = removeLetterFromWord(
           words![pos.current.wordIdx],
         );
-        const _wordProcessed = processWord(_wordWithoutLetter, solution);
+        const _wordProcessed = processWord(
+          _wordWithoutLetter,
+          solution.current!,
+        );
 
         const _words = [...words!];
         _words[pos.current.wordIdx] = _wordProcessed;
@@ -136,7 +197,7 @@ const App = () => {
           key,
           words![pos.current.wordIdx],
         );
-        const _wordProcessed = processWord(_wordWithLetter, solution);
+        const _wordProcessed = processWord(_wordWithLetter, solution.current!);
 
         const _words = [...words!];
         _words[pos.current.wordIdx] = _wordProcessed;
@@ -146,18 +207,22 @@ const App = () => {
       }
     };
 
-    if (!words) return; // Placeholder
+    if (roundState !== "playing") return;
     document.addEventListener("keyup", handleKeyUp);
 
     return () => {
       document.removeEventListener("keyup", handleKeyUp);
     };
-  }, [words]);
+  }, [roundState, words]);
 
   const letterVariants: Variants = {
-    hidden: {
-      borderWidth: "2px",
-      transition: { duration: 0.1 },
+    hidden: () => {
+      const bgColor = theme === "dark" ? "rgb(0, 0, 0)" : "rgb(255, 255, 255)";
+      return {
+        backgroundColor: bgColor,
+        borderWidth: "2px",
+        transition: { duration: 0.1 },
+      };
     },
     selected: {
       borderWidth: "4px",
@@ -189,50 +254,65 @@ const App = () => {
               : [bgColorHidden, bgColorHidden, bgColorIncorrect],
         transition: {
           delay: idx * 0.1,
+          duration: 0.5
         },
       };
     },
   };
 
-  if (!words) return null;
-
   return (
-    <div className={`grid h-dvh place-items-center`}>
-      <div className={`flex flex-col gap-2`}>
-        {words.map((word, wordIdx) => (
-          <motion.div key={wordIdx} className={`flex gap-2`}>
-            {word.output.map((letter, letterIdx) => (
-              <motion.div
-                initial="hidden"
-                animate={
-                  letter.state === "visible"
-                    ? "visible"
-                    : wordIdx === pos.current.wordIdx &&
-                        letterIdx === pos.current.letterIdx
-                      ? "selected"
-                      : letter.key.length > 0
-                        ? "typed"
-                        : ""
-                }
-                variants={letterVariants}
-                custom={{
-                  variant: letter.variant,
-                  idx: letterIdx,
-                  isSelected:
-                    wordIdx === pos.current.wordIdx &&
-                    letterIdx === pos.current.letterIdx,
-                }}
-                key={letterIdx}
-                className={`grid h-16 w-16 place-items-center`}
-              >
-                <span className={`text-4xl font-bold uppercase`}>
-                  {letter.key}
-                </span>
+    <div className="flex h-dvh flex-col">
+      <NewGameModal
+        open={newGameModalOpen}
+        onOpenChange={setNewGameModalOpen}
+        onEasyClick={onEasyClick}
+        onHardClick={onHardClick}
+      />
+
+      <ResultsModal
+        open={resultsModalOpen}
+        onOpenChange={setResultsModalOpen}
+        onNewRound={onNewRound}
+        state={roundState}
+        solution={solution.current!}
+      />
+
+      {words && (
+        <div className={`grid h-full place-items-center`}>
+          <div className={`flex flex-col gap-2`}>
+            {words!.map((word, wordIdx) => (
+              <motion.div key={wordIdx} className={`flex gap-2`}>
+                {word.output.map((letter, letterIdx) => (
+                  <motion.div
+                    initial="hidden"
+                    animate={
+                      letter.state === "visible"
+                        ? "visible"
+                        : wordIdx === pos.current.wordIdx &&
+                            letterIdx === pos.current.letterIdx
+                          ? "selected"
+                          : letter.key.length > 0
+                            ? "typed"
+                            : ""
+                    }
+                    variants={letterVariants}
+                    custom={{
+                      variant: letter.variant,
+                      idx: letterIdx,
+                    }}
+                    key={letterIdx}
+                    className={`grid h-16 w-16 place-items-center`}
+                  >
+                    <span className={`text-4xl font-bold uppercase`}>
+                      {letter.key}
+                    </span>
+                  </motion.div>
+                ))}
               </motion.div>
             ))}
-          </motion.div>
-        ))}
-      </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
