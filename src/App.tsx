@@ -79,8 +79,14 @@ const processWord = (word: Word, solution: string): Word => {
   return _word;
 };
 
+const getComputedStyleValue = (property: string) => {
+  return window
+    .getComputedStyle(document.documentElement)
+    .getPropertyValue(property)
+    .trim();
+};
+
 const App = () => {
-  const theme: "light" | "dark" = "light";
   const wordAmount = 6;
   const lettersPerWord = 5;
   const resultsModalTimeout = 1000;
@@ -217,7 +223,8 @@ const App = () => {
 
   const letterVariants: Variants = {
     hidden: () => {
-      const bgColor = theme === "dark" ? "rgb(0, 0, 0)" : "rgb(255, 255, 255)";
+      const bgColorHiddenValue = getComputedStyleValue("--letter-bg");
+      const bgColor = `rgb(${bgColorHiddenValue})`;
       return {
         backgroundColor: bgColor,
         borderWidth: "2px",
@@ -235,26 +242,49 @@ const App = () => {
       },
     },
     visible: ({ variant, idx }) => {
-      const bgColorHidden =
-        theme === "dark" ? "rgb(0, 0, 0)" : "rgb(255, 255, 255)";
-      const bgColorCorrect =
-        theme === "dark" ? "rgb(74, 222, 128)" : "rgb(74, 222, 128)";
-      const bgColorIncorrect =
-        theme === "dark" ? "rgb(156, 163, 175)" : "rgb(156, 163, 175)";
-      const bgColorExists =
-        theme === "dark" ? "rgb(250, 204, 21)" : "rgb(250, 204, 21)";
+      const bgColorHiddenValue = getComputedStyleValue("--letter-bg");
+      const bgColorCorrectValue = getComputedStyleValue("--letter-correct");
+      const bgColorIncorrectValue = getComputedStyleValue("--letter-incorrect");
+      const bgColorExistsValue = getComputedStyleValue("--letter-exists");
+
+      const bgColorHidden = `rgb(${bgColorHiddenValue})`;
+      const bgColorCorrect = `rgb(${bgColorCorrectValue})`;
+      const bgColorIncorrect = `rgb(${bgColorIncorrectValue})`;
+      const bgColorExists = `rgb(${bgColorExistsValue})`;
+
+      let backgroundColor;
+      switch (variant) {
+        case "correct":
+          backgroundColor = [
+            bgColorHidden,
+            bgColorHidden,
+            bgColorHidden,
+            bgColorCorrect,
+          ];
+          break;
+        case "exists":
+          backgroundColor = [
+            bgColorHidden,
+            bgColorHidden,
+            bgColorHidden,
+            bgColorExists,
+          ];
+          break;
+        default:
+          backgroundColor = [
+            bgColorHidden,
+            bgColorHidden,
+            bgColorHidden,
+            bgColorIncorrect,
+          ];
+          break;
+      }
 
       return {
         rotateY: ["0deg", "-90deg", "-90deg", "0deg"],
-        backgroundColor:
-          variant === "correct"
-            ? [bgColorHidden, bgColorHidden, bgColorCorrect]
-            : variant === "exists"
-              ? [bgColorHidden, bgColorHidden, bgColorExists]
-              : [bgColorHidden, bgColorHidden, bgColorIncorrect],
+        backgroundColor,
         transition: {
           delay: idx * 0.1,
-          duration: 0.5
         },
       };
     },

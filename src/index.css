@@ -1,3 +1,20 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --white: 255 255 255;
+  --black: 0 0 0;
+
+  --letter-bg: 255 255 255;
+  --letter-correct: 74 222 128;
+  --letter-incorrect: 156 163 175;
+  --letter-exists: 250 204 21;
+}
+
+[class="dark"] {
+  --letter-bg: 0 0 0;
+  --letter-correct: 74 222 128;
+  --letter-incorrect: 156 163 175;
+  --letter-exists: 250 204 21;
+}
