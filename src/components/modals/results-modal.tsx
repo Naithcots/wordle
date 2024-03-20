@@ -1,10 +1,10 @@
 import { Dispatch, SetStateAction } from "react";
-import { RoundState } from "../../types";
+import { RoundStateType } from "../../types";
 import Modal from "../ui/modal";
 
 type ResultsModalProps = {
   open: boolean;
-  state: RoundState;
+  state: RoundStateType;
   solution: string;
   onOpenChange: Dispatch<SetStateAction<boolean>>;
   onNewRound: () => void;

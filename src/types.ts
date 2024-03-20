@@ -1,15 +1,15 @@
-export type Word = {
+export type WordType = {
   input: string;
-  output: Letter[];
+  output: LetterType[];
 };
 
-export type Letter = {
+export type LetterType = {
   key: string;
   state: "hidden" | "visible";
   variant: "correct" | "incorrect" | "exists" | null;
 };
 
-export type RoundState =
+export type RoundStateType =
   | "init"
   | "playing"
   | "resultsCorrect"
