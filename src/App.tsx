@@ -1,7 +1,7 @@
 import NewGameModal from "./components/modals/new-game-modal";
 import ResultsModal from "./components/modals/results-modal";
 import Word from "./components/word";
-import useGame from "./hooks/useGame";
+import useGame from "./hooks/use-game";
 
 const App = () => {
   const {

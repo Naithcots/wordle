@@ -1,5 +1,5 @@
 import { Variants, motion } from "framer-motion";
-import { getComputedStyleValue } from "../lib/utils";
+import useLetterColors from "../hooks/use-letter-colors";
 import { LetterType } from "../types";
 
 type LetterProps = {
@@ -9,10 +9,11 @@ type LetterProps = {
 };
 
 const Letter = ({ letter, letterIdx, selected }: LetterProps) => {
+  const { colors } = useLetterColors();
+
   const letterVariants: Variants = {
     hidden: () => {
-      const bgColorHiddenValue = getComputedStyleValue("--letter-bg");
-      const bgColor = `rgb(${bgColorHiddenValue})`;
+      const bgColor = `rgb(${colors.background})`;
       return {
         backgroundColor: bgColor,
         borderWidth: "2px",
@@ -30,15 +31,10 @@ const Letter = ({ letter, letterIdx, selected }: LetterProps) => {
       },
     },
     visible: ({ variant, idx }) => {
-      const bgColorHiddenValue = getComputedStyleValue("--letter-bg");
-      const bgColorCorrectValue = getComputedStyleValue("--letter-correct");
-      const bgColorIncorrectValue = getComputedStyleValue("--letter-incorrect");
-      const bgColorExistsValue = getComputedStyleValue("--letter-exists");
-
-      const bgColorHidden = `rgb(${bgColorHiddenValue})`;
-      const bgColorCorrect = `rgb(${bgColorCorrectValue})`;
-      const bgColorIncorrect = `rgb(${bgColorIncorrectValue})`;
-      const bgColorExists = `rgb(${bgColorExistsValue})`;
+      const bgColorHidden = `rgb(${colors.background})`;
+      const bgColorCorrect = `rgb(${colors.correct})`;
+      const bgColorIncorrect = `rgb(${colors.incorrect})`;
+      const bgColorExists = `rgb(${colors.exists})`;
 
       let backgroundColor;
       switch (variant) {

@@ -1,11 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import wordsEasy from "../assets/words_easy.json";
 import wordsHard from "../assets/words_hard.json";
+import { useTheme } from "../components/theme-provider";
 import generateWords from "../lib/functions/generate-words";
 import insertLetterToWord from "../lib/functions/insert-letter-to-word";
 import processWord from "../lib/functions/process-word";
 import removeLetterFromWord from "../lib/functions/remove-letter-from-word";
+import { getComputedStyleValue } from "../lib/utils";
 import { LetterType, RoundStateType, WordType } from "../types";
+import useLetterColors from "./use-letter-colors";
 
 const useGame = () => {
   const wordAmount = 6;
@@ -21,6 +24,9 @@ const useGame = () => {
     wordIdx: 0,
     letterIdx: 0,
   });
+
+  const { theme } = useTheme();
+  const { setColors } = useLetterColors();
 
   const onEasyClick = () => {
     const randomWord =
@@ -57,6 +63,15 @@ const useGame = () => {
 
     init();
   }, []);
+
+  useEffect(() => {
+    setColors({
+      background: getComputedStyleValue("--letter-bg"),
+      correct: getComputedStyleValue("--letter-correct"),
+      incorrect: getComputedStyleValue("--letter-incorrect"),
+      exists: getComputedStyleValue("--letter-exists"),
+    });
+  }, [theme]);
 
   useEffect(() => {
     const handleKeyUp = (ev: KeyboardEvent) => {
